@@ -58,4 +58,12 @@ cp /opt/studio-3t/studio3t.desktop "/home/${USER}/.local/share/applications"
 echo "Installing tilix"
 apt-get install tilix >> ./logs
 
+echo "Downloading aliases"
+git clone https://github.com/KingsDevelopment/shell-aliases.git /home/$USER/aliases &>> ./logs
+echo ". ~/aliases/index" >> /home/$USER/.bashrc
+
+echo "Installing snap"
+apt-get install snapd &>> ./logs
+echo 'PATH=$PATH:/snap/bin' >> /home/$USER/.bashrc
+
 echo "We're done!"
