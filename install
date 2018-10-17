@@ -1,0 +1,61 @@
+#!/bin/bash
+[ "$UID" -eq 0 ] || exec sudo bash $0 $USER
+USER=$1
+
+echo "Welcome to the Elementary OS Juno installer (:"
+echo > ./logs
+
+echo "Installing dependencies"
+apt-get update >> ./logs
+apt-get install -y libgnome-keyring-common libgnome-keyring-dev software-properties-common git >> ./logs
+
+echo "Installing Elementary-Tweaks"
+add-apt-repository -y ppa:philip.scott/elementary-tweaks >> ./logs
+apt-get update >> ./logs
+apt-get install -y elementary-tweaks >> ./logs
+
+echo "Installing vimix theme"
+./vimix &>> ./logs
+
+echo "Installing docker"
+curl -fsSL get.docker.com -o get-docker.sh
+./get-docker.sh &>> ./logs
+sudo usermod -aG docker $USER
+
+echo "Installing docker-compose"
+curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose &>> ./logs 
+chmod +x /usr/local/bin/docker-compose
+
+rm -rf applications
+mkdir applications
+echo "Downloading google chrome"
+curl -L -o applications/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &>> ./logs
+
+echo "Downloading visual studio Code"
+curl -L -o applications/code.deb https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable &>> ./logs
+
+echo "Downloading discord"
+curl -L -o applications/discord.deb https://discordapp.com/api/download?platform=linux&format=deb &>> ./logs
+
+echo "Downloading gitkraken"
+curl -L -o applications/gitkraken.deb http://release.gitkraken.com/linux/gitkraken-amd64-18.04.deb &>> ./logs
+
+echo "Downloading mailspring"
+curl -L -o applications/mailspring.deb https://updates.getmailspring.com/download?platform=linuxDeb &>> ./logs
+
+echo "Downloading franz"
+curl -L -o applications/franz.deb https://github.com/meetfranz/franz/releases/download/v5.0.0-beta.18/franz_5.0.0-beta.18_amd64.deb &>> ./logs
+
+echo "Installing downloaded applications"
+apt install -y ./applications/*.deb >> ./logs
+
+echo "Downloading Studio 3T"
+git clone https://github.com/KingsDevelopment/s3t.git /opt/studio-3t-new &>> ./logs
+
+echo "Installing Studio 3T"
+cp /opt/studio-3t/studio3t.desktop "/home/${USER}/.local/share/applications"
+
+echo "Installing tilix"
+apt-get install tilix >> ./logs
+
+echo "We're done!"
