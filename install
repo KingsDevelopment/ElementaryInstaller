@@ -26,6 +26,12 @@ echo "Installing docker-compose"
 curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose &>> ./logs 
 chmod +x /usr/local/bin/docker-compose
 
+echo "Installing spotify"
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90 &>> ./logs
+echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+apt-get update >> ./logs
+apt-get install -y spotify-client >> ./logs
+
 rm -rf applications
 mkdir applications
 echo "Downloading google chrome"
