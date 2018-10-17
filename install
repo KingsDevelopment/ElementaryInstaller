@@ -66,4 +66,8 @@ echo "Installing snap"
 apt-get install snapd &>> ./logs
 echo 'PATH=$PATH:/snap/bin' >> /home/$USER/.bashrc
 
+echo "Dock items"
+rm -rf /home/$USER/.config/plank/dock1/launchers
+cp -R launchers /home/$USER/.config/plank/dock1/launchers
+
 echo "We're done!"
