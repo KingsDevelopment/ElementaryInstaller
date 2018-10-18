@@ -6,19 +6,20 @@ echo "Welcome to the Elementary OS Juno installer (:"
 echo > ./logs
 
 echo "Installing dependencies"
-apt-get update >> ./logs
-apt-get install -y libgnome-keyring-common libgnome-keyring-dev software-properties-common git >> ./logs
+apt-get update &>> ./logs
+apt-get install -y libgnome-keyring-common libgnome-keyring-dev software-properties-common git &>> ./logs
 
 echo "Installing Elementary-Tweaks"
-add-apt-repository -y ppa:philip.scott/elementary-tweaks >> ./logs
-apt-get update >> ./logs
-apt-get install -y elementary-tweaks >> ./logs
+add-apt-repository -y ppa:philip.scott/elementary-tweaks &>> ./logs
+apt-get update &>> ./logs
+apt-get install -y elementary-tweaks &>> ./logs
 
 echo "Installing vimix theme"
 ./vimix &>> ./logs
 
 echo "Installing docker"
 curl -fsSL get.docker.com -o get-docker.sh
+chmod +x ./get-docker.sh
 ./get-docker.sh &>> ./logs
 sudo usermod -aG docker $USER
 
@@ -29,8 +30,8 @@ chmod +x /usr/local/bin/docker-compose
 echo "Installing spotify"
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90 &>> ./logs
 echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-apt-get update >> ./logs
-apt-get install -y spotify-client >> ./logs
+apt-get update &>> ./logs
+apt-get install -y spotify-client &>> ./logs
 
 rm -rf applications
 mkdir applications
@@ -53,27 +54,32 @@ echo "Downloading franz"
 curl -L -o applications/franz.deb https://github.com/meetfranz/franz/releases/download/v5.0.0-beta.18/franz_5.0.0-beta.18_amd64.deb &>> ./logs
 
 echo "Installing downloaded applications"
-apt install -y ./applications/*.deb >> ./logs
+apt install -y ./applications/*.deb &>> ./logs
+
+echo "Visual studio watch fix"
+echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 
 echo "Downloading Studio 3T"
-git clone https://github.com/KingsDevelopment/s3t.git /opt/studio-3t-new &>> ./logs
+git clone https://github.com/KingsDevelopment/s3t.git /opt/studio-3t &>> ./logs
 
 echo "Installing Studio 3T"
 cp /opt/studio-3t/studio3t.desktop "/home/${USER}/.local/share/applications"
 
 echo "Installing tilix"
-apt-get install tilix >> ./logs
+apt-get install -y tilix &>> ./logs
 
 echo "Downloading aliases"
 git clone https://github.com/KingsDevelopment/shell-aliases.git /home/$USER/aliases &>> ./logs
-echo ". ~/aliases/index" >> /home/$USER/.bashrc
+echo ". ~/aliases/index" &>> /home/$USER/.bashrc
 
 echo "Installing snap"
 apt-get install snapd &>> ./logs
-echo 'PATH=$PATH:/snap/bin' >> /home/$USER/.bashrc
+echo 'PATH=$PATH:/snap/bin' &>> /home/$USER/.bashrc
 
 echo "Dock items"
 rm -rf /home/$USER/.config/plank/dock1/launchers
 cp -R launchers /home/$USER/.config/plank/dock1/launchers
+chown $USER:$USER /home/$USER/.config/plank/dock1/launchers/*
+killall plank
 
 echo "We're done!"
