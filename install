@@ -9,6 +9,13 @@ echo "Installing dependencies"
 apt-get update &>> ./logs
 apt-get install -y libgnome-keyring-common libgnome-keyring-dev software-properties-common git &>> ./logs
 
+echo "Fix openvpn settings"
+apt-get install openvpn-systemd-resolved &>> ./logs
+systemctl enable systemd-resolved.service &>> ./logs
+systemctl start systemd-resolved.service &>> ./logs
+cp ./network/nsswitch.conf /etc/nsswitch.conf &>> ./logs
+ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf &>> ./logs
+
 echo "Installing Elementary-Tweaks"
 add-apt-repository -y ppa:philip.scott/elementary-tweaks &>> ./logs
 apt-get update &>> ./logs
