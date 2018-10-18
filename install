@@ -17,6 +17,10 @@ apt-get install -y elementary-tweaks &>> ./logs
 echo "Installing vimix theme"
 ./vimix &>> ./logs
 
+echo "Installing Paper icon theme"
+add-apt-repository -u -y ppa:snwh/ppa &>> ./logs
+apt-get install paper-icon-theme &>> ./logs
+
 echo "Installing docker"
 curl -fsSL get.docker.com -o get-docker.sh
 chmod +x ./get-docker.sh
@@ -33,7 +37,6 @@ echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sourc
 apt-get update &>> ./logs
 apt-get install -y spotify-client &>> ./logs
 
-rm -rf applications
 mkdir applications
 echo "Downloading google chrome"
 curl -L -o applications/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &>> ./logs
@@ -55,6 +58,7 @@ curl -L -o applications/franz.deb https://github.com/meetfranz/franz/releases/do
 
 echo "Installing downloaded applications"
 apt install -y ./applications/*.deb &>> ./logs
+rm -rf applications
 
 echo "Visual studio watch fix"
 echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
@@ -70,16 +74,19 @@ apt-get install -y tilix &>> ./logs
 
 # echo "Downloading aliases"
 # git clone https://github.com/KingsDevelopment/shell-aliases.git /home/$USER/aliases &>> ./logs
-# echo ". ~/aliases/index" &>> /home/$USER/.bashrc
+# chown -r $USER:$USER /home/$USER/aliases
+# echo "" >> /home/$USER/.bashrc
+# echo '. ~/aliases/index' &>> /home/$USER/.bashrc
 
 # echo "Installing snap"
 # apt-get install snapd &>> ./logs
+# echo "" >> /home/$USER/.bashrc
 # echo 'PATH=$PATH:/snap/bin' &>> /home/$USER/.bashrc
 
-echo "Dock items"
-rm -rf /home/$USER/.config/plank/dock1/launchers
-cp -R launchers /home/$USER/.config/plank/dock1/launchers
-chown $USER:$USER /home/$USER/.config/plank/dock1/launchers/*
-killall plank
+# echo "Dock items"
+# rm -rf /home/$USER/.config/plank/dock1/launchers
+# cp -R launchers /home/$USER/.config/plank/dock1/launchers
+# chown $USER:$USER /home/$USER/.config/plank/dock1/launchers/*
+# killall plank
 
 echo "We're done!"
