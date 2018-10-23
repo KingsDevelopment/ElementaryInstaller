@@ -10,7 +10,7 @@ apt-get update &>> ./logs
 apt-get install -y libgnome-keyring-common libgnome-keyring-dev software-properties-common git &>> ./logs
 
 echo "Fix openvpn settings"
-apt-get install openvpn-systemd-resolved &>> ./logs
+apt-get install -y openvpn-systemd-resolved &>> ./logs
 systemctl enable systemd-resolved.service &>> ./logs
 systemctl start systemd-resolved.service &>> ./logs
 cp ./network/nsswitch.conf /etc/nsswitch.conf &>> ./logs
